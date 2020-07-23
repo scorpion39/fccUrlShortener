@@ -50,6 +50,8 @@ app.post("/api/shorturl/new", (req, res) => {
     dnsUrl = dnsUrl.split("https://")[1];
   } else if (/^http:\/\//.test(dnsUrl)) {
     dnsUrl = dnsUrl.split("http://")[1];
+  } else {
+    theurl = "http://" + theurl;
   }
 
   dns.lookup(dnsUrl, async (err, address, family) => {
@@ -59,7 +61,7 @@ app.post("/api/shorturl/new", (req, res) => {
       return;
     }
 
-    let num = Math.floor(Math.random() * 30);
+    let num = Math.floor(Math.random() * 1000);
     let alreadyUsedNumbers = [];
     const newUrl = {
       fullAddress: theurl,
@@ -88,7 +90,6 @@ app.post("/api/shorturl/new", (req, res) => {
 
 app.get("/api/shorturl/:num", async (req, res) => {
   const number = parseInt(req.params.num);
-  console.log(typeof number);
   try {
     const url = await Url.findOne({ shortAddressNumber: number }).lean();
     if (!url) {
